@@ -17,12 +17,11 @@ def get_video_id(url):
         raise ValueError("Invalid YouTube URL")
 
 
-def get_transcript(video_id, language_code="ko"):
+def get_transcript(video_id):
     """Get transcript for a given video ID."""
     try:
         transcript = YouTubeTranscriptApi.get_transcript(
-            video_id, languages=[language_code]
-        )
+            video_id, languages=['en', 'de', 'fr', 'es', 'it', 'ja', 'ko', 'nl', 'pt', 'ru', 'zh-Hans', 'zh-Hant'])
         formatter = TextFormatter()
         return formatter.format_transcript(transcript)
     except Exception as e:
