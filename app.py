@@ -29,15 +29,13 @@ def get_transcript(video_id, language_code="ko"):
         return f"An error occurred: {str(e)}"
 
 
-@app.route("/api/transcript", methods=["POST"])
+@app.route("/api/transcript", methods=["GET"])
 def get_youtube_transcript():
-    data = request.json
-    url = data.get("url")
-    if not url:
-        return jsonify({"error": "No URL provided"}), 400
+    video_id = request.args.get("id")
+    if not video_id:
+        return jsonify({"error": "No video ID provided"}), 400
 
     try:
-        video_id = get_video_id(url)
         transcript = get_transcript(video_id)
         return jsonify({"transcript": transcript})
     except ValueError as e:
