@@ -32,8 +32,6 @@ model = genai.GenerativeModel(
     system_instruction="summarize in korean",
 )
 
-chat_session = model.start_chat(history=[])
-
 def get_video_id(url: str) -> str:
     """Extract video ID from YouTube URL."""
     if "youtu.be" in url:
@@ -68,6 +66,7 @@ async def get_youtube_transcript(request: Request):
 
     try:
         transcript = get_transcript(video_id)
+        chat_session = model.start_chat(history=[])
         response = chat_session.send_message(transcript)
         return {"transcript": extract_text_from_response(response)}
     except ValueError as e:
