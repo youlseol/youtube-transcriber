@@ -15,7 +15,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-genai.configure(api_key=os.environ["GEMINI_API_KEY"])
+#genai.configure(api_key=os.environ["GEMINI_API_KEY"])
+genai.configure(api_key="AIzaSyCFvl1HowCM4E6uaW4pNJzps6w6TMLzH1I")
 
 # Create the model
 generation_config = {
@@ -54,7 +55,7 @@ def get_transcript(video_id: str) -> str:
 def extract_text_from_response(response: dict) -> str:
     """Extract text from the response object."""
     try:
-        return response["candidates"][0]["content"]["parts"][0]["text"]
+        return response.candidates[0].content.parts[0].text
     except (KeyError, IndexError) as e:
         raise ValueError("Invalid response structure") from e
 
@@ -75,4 +76,4 @@ async def get_youtube_transcript(request: Request):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000, debug=True)
+    uvicorn.run(app, host="0.0.0.0", port=8000)
