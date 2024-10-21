@@ -66,8 +66,7 @@ async def get_youtube_transcript(request: Request):
 
     try:
         transcript = get_transcript(video_id)
-        chat_session = model.start_chat(history=[])
-        response = chat_session.send_message(transcript)
+        response = model.generate_content(transcript)
         return {"transcript": extract_text_from_response(response)}
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
