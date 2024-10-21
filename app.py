@@ -2,6 +2,8 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api.formatters import TextFormatter
+import os
+import google.generativeai as genai
 
 app = FastAPI()
 
@@ -12,6 +14,25 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+genai.configure(api_key=os.environ["GEMINI_API_KEY"])
+
+# Create the model
+generation_config = {
+    "temperature": 1,
+    "top_p": 0.95,
+    "top_k": 64,
+    "max_output_tokens": 8192,
+    "response_mime_type": "text/plain",
+}
+
+model = genai.GenerativeModel(
+    model_name="gemini-1.5-flash",
+    generation_config=generation_config,
+    system_instruction="summarize in korean",
+)
+
+chat_session = model.start_chat(history=[])
 
 def get_video_id(url: str) -> str:
     """Extract video ID from YouTube URL."""
@@ -40,7 +61,8 @@ async def get_youtube_transcript(request: Request):
 
     try:
         transcript = get_transcript(video_id)
-        return {"transcript": transcript}
+        response = chat_session.send_message(transcript)
+        return {"transcript": response}
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:

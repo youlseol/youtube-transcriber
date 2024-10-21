@@ -28,7 +28,7 @@
    ```
    [`requirements.txt`](command:_github.copilot.openRelativePath?%5B%7B%22scheme%22%3A%22file%22%2C%22authority%22%3A%22%22%2C%22path%22%3A%22%2FUsers%2FA59833%2FDocuments%2FWorkspace%2Fyoutube-transcriber%2Frequirements.txt%22%2C%22query%22%3A%22%22%2C%22fragment%22%3A%22%22%7D%5D "/Users/A59833/Documents/Workspace/youtube-transcriber/requirements.txt") 파일이 없는 경우, 필요한 패키지를 직접 설치:
    ```sh
-   pip install fastapi uvicorn youtube-transcript-api
+   pip install fastapi uvicorn google-generativeai youtube-transcript-api
    ```
 
 5. **애플리케이션 실행**:
