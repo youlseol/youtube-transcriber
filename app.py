@@ -52,6 +52,13 @@ def get_transcript(video_id: str) -> str:
         return formatter.format_transcript(transcript)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
+    
+def extract_text_from_response(response: dict) -> str:
+    """Extract text from the response object."""
+    try:
+        return response["candidates"][0]["content"]["parts"][0]["text"]
+    except (KeyError, IndexError) as e:
+        raise ValueError("Invalid response structure") from e
 
 @app.get("/api/transcript")
 async def get_youtube_transcript(request: Request):
@@ -62,7 +69,7 @@ async def get_youtube_transcript(request: Request):
     try:
         transcript = get_transcript(video_id)
         response = chat_session.send_message(transcript)
-        return {"transcript": response}
+        return {"transcript": extract_text_from_response(response)}
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
