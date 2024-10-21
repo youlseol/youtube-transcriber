@@ -15,8 +15,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-#genai.configure(api_key=os.environ["GEMINI_API_KEY"])
-genai.configure(api_key="AIzaSyCFvl1HowCM4E6uaW4pNJzps6w6TMLzH1I")
+genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 
 # Create the model
 generation_config = {
