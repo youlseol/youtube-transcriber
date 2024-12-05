@@ -66,12 +66,29 @@ async def get_youtube_transcript(request: Request):
 
     try:
         transcript = get_transcript(video_id)
+        return {"transcript": transcript}
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"An unexpected error occurred: {str(e)}")
+
+
+@app.get("/api/transcript/large-context")
+async def get_youtube_transcript_large_context(request: Request):
+    video_id = request.query_params.get("id")
+    if not video_id:
+        raise HTTPException(status_code=400, detail="No video ID provided")
+
+    try:
+        transcript = get_transcript(video_id)
         response = model.generate_content(transcript)
         return {"transcript": extract_text_from_response(response)}
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"An unexpected error occurred: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"An unexpected error occurred: {str(e)}"
+        )
 
 if __name__ == "__main__":
     import uvicorn
